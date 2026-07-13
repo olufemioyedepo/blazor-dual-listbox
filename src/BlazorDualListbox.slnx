@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="BlazorDualListbox.Tests/BlazorDualListbox.Tests.csproj" />
+  <Project Path="BlazorDualListbox/BlazorDualListbox.csproj" />
+  <Project Path="DemoApp/DemoApp.csproj" />
+</Solution>

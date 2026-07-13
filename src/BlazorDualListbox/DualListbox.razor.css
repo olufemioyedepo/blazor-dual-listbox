@@ -1,0 +1,137 @@
+.dl-root {
+    /* Theming hooks — override any of these from consumer CSS. */
+    --dl-gap: 0.5rem;
+    --dl-border-color: #ccc;
+    --dl-radius: 6px;
+    --dl-bg: #fff;
+    --dl-fg: #1a1a1a;
+    --dl-muted-fg: #666;
+    --dl-hover-bg: rgba(0, 0, 0, 0.05);
+    --dl-highlight-bg: #2563eb;
+    --dl-highlight-fg: #fff;
+    --dl-accent: #2563eb;
+    --dl-list-height: 16rem;
+    --dl-min-width: 12rem;
+
+    display: flex;
+    align-items: stretch;
+    gap: var(--dl-gap);
+    font-family: inherit;
+    color: var(--dl-fg);
+}
+
+.dl-pane {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1 1 var(--dl-min-width);
+    min-width: 0;
+}
+
+.dl-header {
+    font-weight: 600;
+}
+
+.dl-filter {
+    padding: 0.35rem 0.5rem;
+    border: 1px solid var(--dl-border-color);
+    border-radius: var(--dl-radius);
+    font: inherit;
+    color: inherit;
+    background: var(--dl-bg);
+}
+
+.dl-list {
+    list-style: none;
+    margin: 0;
+    padding: 0.25rem;
+    border: 1px solid var(--dl-border-color);
+    border-radius: var(--dl-radius);
+    background: var(--dl-bg);
+    height: var(--dl-list-height);
+    overflow-y: auto;
+    outline: none;
+}
+
+.dl-list:focus-visible {
+    box-shadow: 0 0 0 2px var(--dl-accent);
+    border-color: var(--dl-accent);
+}
+
+.dl-option {
+    padding: 0.3rem 0.5rem;
+    border-radius: calc(var(--dl-radius) - 2px);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dl-option:hover {
+    background: var(--dl-hover-bg);
+}
+
+.dl-option.dl-highlight {
+    background: var(--dl-highlight-bg);
+    color: var(--dl-highlight-fg);
+}
+
+.dl-option.dl-active {
+    outline: 2px solid var(--dl-accent);
+    outline-offset: -2px;
+}
+
+.dl-empty {
+    padding: 0.5rem;
+    color: var(--dl-muted-fg);
+    font-style: italic;
+    cursor: default;
+}
+
+.dl-count {
+    font-size: 0.8em;
+    color: var(--dl-muted-fg);
+}
+
+.dl-controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.35rem;
+}
+
+.dl-btn {
+    padding: 0.25rem 0.6rem;
+    border: 1px solid var(--dl-border-color);
+    border-radius: var(--dl-radius);
+    background: var(--dl-bg);
+    color: var(--dl-fg);
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.dl-btn:hover:not(:disabled) {
+    background: var(--dl-hover-bg);
+}
+
+.dl-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.dl-disabled {
+    opacity: 0.7;
+}
+
+@media (max-width: 480px) {
+    .dl-root {
+        flex-direction: column;
+    }
+
+    .dl-controls {
+        flex-direction: row;
+        justify-content: center;
+    }
+}

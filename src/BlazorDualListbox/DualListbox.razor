@@ -1,0 +1,66 @@
+@typeparam TItem
+
+<div class="@RootClass()" @attributes="AdditionalAttributes">
+
+    @Pane(true, SourceHeader, "Available items")
+
+    <div class="dl-controls" role="group" aria-label="Move controls">
+        <button type="button" class="dl-btn" title="Move selected right" aria-label="Move selected right"
+                @onclick="() => MoveHighlighted(true)" disabled="@Disabled">
+            @AddSingleItemButtonText
+        </button>
+        @if (AllowMoveAll)
+        {
+            <button type="button" class="dl-btn" title="Move all right" aria-label="Move all right"
+                    @onclick="() => MoveAll(true)" disabled="@Disabled">&raquo;</button>
+            <button type="button" class="dl-btn" title="Move all left" aria-label="Move all left"
+                    @onclick="() => MoveAll(false)" disabled="@Disabled">&laquo;</button>
+        }
+        <button type="button" class="dl-btn" title="Move selected left" aria-label="Move selected left"
+                @onclick="() => MoveHighlighted(false)" disabled="@Disabled">&lsaquo;</button>
+    </div>
+
+    @Pane(false, SelectedHeader, "Selected items")
+
+</div>
+
+@code {
+    private RenderFragment Pane(bool isSource, string? header, string ariaLabel) =>
+    @<div class="dl-pane">
+        @{ var view = View(isSource); }
+        @if (!string.IsNullOrEmpty(header))
+        {
+            <div class="dl-header">@header</div>
+        }
+        @if (Filterable)
+        {
+            <input class="dl-filter" type="search" placeholder="@FilterPlaceholder"
+                   value="@(isSource ? _sourceFilter : _selectedFilter)"
+                   @oninput="e => OnFilterChanged(e, isSource)"
+                   disabled="@Disabled" aria-label="@($"Filter {ariaLabel.ToLowerInvariant()}")" />
+        }
+        <ul class="dl-list" role="listbox" aria-multiselectable="true"
+            tabindex="@(Disabled ? "-1" : "0")"
+            aria-label="@ariaLabel"
+            aria-activedescendant="@ActiveDescendant(isSource, view)"
+            @onkeydown="e => OnKeyDown(e, isSource)">
+            @for (var i = 0; i < view.Count; i++)
+            {
+                var index = i;
+                var item = view[i];
+                <li id="@OptionId(index, isSource)" role="option"
+                    class="@OptionClass(item, isSource)"
+                    aria-selected="@(IsHighlighted(item, isSource) ? "true" : "false")"
+                    @onclick="e => OnOptionClick(e, item, index, isSource)"
+                    @ondblclick="() => OnOptionDblClick(item, isSource)">
+                    @RenderItem(item)
+                </li>
+            }
+            @if (view.Count == 0)
+            {
+                <li class="dl-empty" aria-disabled="true">@EmptyText</li>
+            }
+        </ul>
+        <div class="dl-count">@view.Count item@(view.Count == 1 ? "" : "s")</div>
+    </div>;
+}

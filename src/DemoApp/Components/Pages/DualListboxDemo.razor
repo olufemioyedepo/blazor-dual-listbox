@@ -1,0 +1,49 @@
+@page "/dual-listbox"
+@using BlazorDualListbox
+@using BlazorDualListbox.Constants
+
+<PageTitle>Dual Listbox</PageTitle>
+
+<h1>Dual Listbox</h1>
+
+<p>Move fruit between the two lists using the buttons, by double-clicking an item, or with the
+keyboard (focus a list, then arrows to navigate, space to select, enter to move).</p>
+
+<DualListbox TItem="Fruit"
+             @bind-Source="_available"
+             @bind-Selected="_selected"
+             TextSelector="f => f.Name"
+             ValueSelector="f => f.Id"
+             Filterable="true"
+             SourceHeader="@BlazorDualistBoxConstants.DefaultSourceHeaderCaption"
+             SelectedHeader="@BlazorDualistBoxConstants.DefaultSelectedHeaderCaption"
+             AddButtonText="@BlazorDualistBoxConstants.DefaultAddSingleItemButtonText"
+             OnMoved="OnMoved" />
+
+<hr />
+
+<p><strong>Selected (@_selected.Count()):</strong>
+    @(_selected.Any() ? string.Join(", ", _selected.Select(f => f.Name)) : "—")</p>
+
+@if (_lastMove is not null)
+{
+    <p><em>Last move: @_lastMove</em></p>
+}
+
+@code {
+    private IEnumerable<Fruit> _available = new List<Fruit>
+    {
+        new(1, "Apple"), new(2, "Banana"), new(3, "Cherry"), new(4, "Date"),
+        new(5, "Elderberry"), new(6, "Fig"), new(7, "Grape"), new(8, "Honeydew"),
+        new(9, "Kiwi"), new(10, "Lemon"), new(11, "Mango"), new(12, "Nectarine"),
+    };
+
+    private IEnumerable<Fruit> _selected = new List<Fruit>();
+
+    private string? _lastMove;
+
+    private void OnMoved(DualListboxMoveEventArgs<Fruit> e)
+        => _lastMove = $"{e.Items.Count} item(s) → {e.Direction}";
+
+    public record Fruit(int Id, string Name);
+}
