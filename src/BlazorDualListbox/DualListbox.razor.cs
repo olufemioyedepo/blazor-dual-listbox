@@ -1,3 +1,4 @@
+using BlazorDualListbox.Constants;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -50,7 +51,16 @@ public partial class DualListbox<TItem> : ComponentBase
     [Parameter] public string EmptyText { get; set; } = "No items";
 
     /// <summary>Text shown on the "add single item" button from source to selected.</summary>
-    [Parameter] public string AddSingleItemButtonText { get; set; }
+    [Parameter] public string AddSingleButtonText { get; set; } = BlazorDualistBoxConstants.DefaultAddSingleItemToSelectedButtonText;
+
+    /// <summary>Text shown on the "add all items" button from source to selected.</summary>
+    [Parameter] public string AddAllButtonText { get; set; } = BlazorDualistBoxConstants.DefaultAddAllToSelectedButtonText;
+
+    /// <summary>Text shown on the "remove single item" button from selected to source.</summary>
+    [Parameter] public string RemoveSingleButtonText { get; set; } = BlazorDualistBoxConstants.DefaultRemoveSingleItemFromSelectedButtonText;
+
+    /// <summary>Text shown on the "remove all items" button from selected to source.</summary>
+    [Parameter] public string RemoveAllButtonText { get; set; } = BlazorDualistBoxConstants.DefaultRemoveAllFromSelectedButtonText;
 
     // ---- Behaviour parameters ----
 
@@ -103,6 +113,8 @@ public partial class DualListbox<TItem> : ComponentBase
     private HashSet<object> Highlight(bool isSource) => isSource ? _sourceHighlight : _selectedHighlight;
 
     private string RootClass() => Disabled ? "dl-root dl-disabled" : "dl-root";
+    private bool SourceIsEmpty => Source is null || !Source.Any();
+    private bool SelectedIsEmpty => Selected is null || !Selected.Any();
 
     private string OptionClass(TItem item, bool isSource)
     {

@@ -6,18 +6,24 @@
 
     <div class="dl-controls" role="group" aria-label="Move controls">
         <button type="button" class="dl-btn" title="Move selected right" aria-label="Move selected right"
-                @onclick="() => MoveHighlighted(true)" disabled="@Disabled">
-            @AddSingleItemButtonText
+                @onclick="() => MoveHighlighted(true)" disabled="@SourceIsEmpty">
+            @AddSingleButtonText
         </button>
         @if (AllowMoveAll)
         {
             <button type="button" class="dl-btn" title="Move all right" aria-label="Move all right"
-                    @onclick="() => MoveAll(true)" disabled="@Disabled">&raquo;</button>
+                    @onclick="() => MoveAll(true)" disabled="@SourceIsEmpty">
+                @AddAllButtonText
+            </button>
             <button type="button" class="dl-btn" title="Move all left" aria-label="Move all left"
-                    @onclick="() => MoveAll(false)" disabled="@Disabled">&laquo;</button>
+                    @onclick="() => MoveAll(false)" disabled="@SelectedIsEmpty">
+                @RemoveAllButtonText
+            </button>
         }
         <button type="button" class="dl-btn" title="Move selected left" aria-label="Move selected left"
-                @onclick="() => MoveHighlighted(false)" disabled="@Disabled">&lsaquo;</button>
+                @onclick="() => MoveHighlighted(false)" disabled="@SelectedIsEmpty">
+            @RemoveSingleButtonText
+        </button>
     </div>
 
     @Pane(false, SelectedHeader, "Selected items")
