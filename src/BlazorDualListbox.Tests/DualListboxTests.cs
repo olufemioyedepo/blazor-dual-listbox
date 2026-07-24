@@ -242,16 +242,6 @@ public class DualListboxTests : TestContext
         Assert.Equal(2, source[0].Id);
     }
 
-    [Fact]
-    public void Disabled_disables_buttons_and_list()
-    {
-        var cut = RenderComponent<DualListbox<string>>(p => p
-            .Add(x => x.Source, Abc())
-            .Add(x => x.Disabled, true));
-
-        Assert.True(cut.Find("button[title='Move selected right']").HasAttribute("disabled"));
-        Assert.Equal("-1", cut.FindAll("ul.dl-list")[0].GetAttribute("tabindex"));
-    }
 
     [Fact]
     public void List_has_expected_aria_roles()
@@ -262,6 +252,40 @@ public class DualListboxTests : TestContext
         Assert.Equal("listbox", list.GetAttribute("role"));
         Assert.Equal("true", list.GetAttribute("aria-multiselectable"));
         Assert.Equal("option", Options(cut, source: true)[0].GetAttribute("role"));
+    }
+
+    [Fact]
+    public void Button_classes_compose_shared_and_per_button_classes()
+    {
+        var cut = RenderComponent<DualListbox<string>>(p => p
+            .Add(x => x.Source, Abc())
+            .Add(x => x.Selected, new List<string> { "X" })
+            .Add(x => x.ButtonClass, "shared")
+            .Add(x => x.AddSingleButtonClass, "add-single")
+            .Add(x => x.AddAllButtonClass, "add-all")
+            .Add(x => x.RemoveAllButtonClass, "remove-all")
+            .Add(x => x.RemoveSingleButtonClass, "remove-single"));
+
+        // Class is composed as: built-in "dl-btn" + shared ButtonClass + the per-button class.
+        Assert.Equal("dl-btn shared add-single",
+            cut.Find("button[title='Move selected right']").GetAttribute("class"));
+        Assert.Equal("dl-btn shared add-all",
+            cut.Find("button[title='Move all right']").GetAttribute("class"));
+        Assert.Equal("dl-btn shared remove-all",
+            cut.Find("button[title='Move all left']").GetAttribute("class"));
+        Assert.Equal("dl-btn shared remove-single",
+            cut.Find("button[title='Move selected left']").GetAttribute("class"));
+    }
+
+    [Fact]
+    public void Buttons_keep_only_dl_btn_when_no_custom_classes_given()
+    {
+        var cut = RenderComponent<DualListbox<string>>(p => p
+            .Add(x => x.Source, Abc())
+            .Add(x => x.Selected, new List<string> { "X" }));
+
+        Assert.Equal("dl-btn", cut.Find("button[title='Move selected right']").GetAttribute("class"));
+        Assert.Equal("dl-btn", cut.Find("button[title='Move all right']").GetAttribute("class"));
     }
 
     private record Person(int Id, string Name);

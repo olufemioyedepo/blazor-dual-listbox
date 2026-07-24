@@ -62,6 +62,25 @@ public partial class DualListbox<TItem> : ComponentBase
     /// <summary>Text shown on the "remove all items" button from selected to source.</summary>
     [Parameter] public string RemoveAllButtonText { get; set; } = BlazorDualistBoxConstants.DefaultRemoveAllFromSelectedButtonText;
 
+    /// <summary>
+    /// Additional CSS class(es) applied to all four move buttons, appended to the built-in
+    /// <c>dl-btn</c> class. Use this to apply your own or a framework's button styling
+    /// (e.g. <c>"btn btn-primary"</c>).
+    /// </summary>
+    [Parameter] public string? ButtonClass { get; set; }
+
+    /// <summary>Additional CSS class(es) for the "add single item" (move selected right) button only.</summary>
+    [Parameter] public string? AddSingleButtonClass { get; set; }
+
+    /// <summary>Additional CSS class(es) for the "add all items" (move all right) button only.</summary>
+    [Parameter] public string? AddAllButtonClass { get; set; }
+
+    /// <summary>Additional CSS class(es) for the "remove all items" (move all left) button only.</summary>
+    [Parameter] public string? RemoveAllButtonClass { get; set; }
+
+    /// <summary>Additional CSS class(es) for the "remove single item" (move selected left) button only.</summary>
+    [Parameter] public string? RemoveSingleButtonClass { get; set; }
+
     // ---- Behaviour parameters ----
 
     /// <summary>When <c>true</c>, shows a filter box above each list.</summary>
@@ -113,6 +132,14 @@ public partial class DualListbox<TItem> : ComponentBase
     private HashSet<object> Highlight(bool isSource) => isSource ? _sourceHighlight : _selectedHighlight;
 
     private string RootClass() => Disabled ? "dl-root dl-disabled" : "dl-root";
+
+    // Composes the button class: built-in "dl-btn" + shared ButtonClass + the per-button class.
+    private string BtnClass(string? perButtonClass = null)
+    {
+        var parts = new[] { "dl-btn", ButtonClass, perButtonClass }
+            .Where(p => !string.IsNullOrWhiteSpace(p));
+        return string.Join(" ", parts);
+    }
     private bool SourceIsEmpty => Source is null || !Source.Any();
     private bool SelectedIsEmpty => Selected is null || !Selected.Any();
 

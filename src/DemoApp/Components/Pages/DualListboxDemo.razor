@@ -33,6 +33,52 @@ keyboard (focus a list, then arrows to navigate, space to select, enter to move)
     <p><em>Last move: @_lastMove</em></p>
 }
 
+<hr />
+
+<h2>Custom button styling</h2>
+
+<p>The same component with a shared <code>ButtonClass</code> applied to every button, plus
+per-button classes (<code>AddSingleButtonClass</code>, <code>AddAllButtonClass</code>,
+<code>RemoveAllButtonClass</code>, <code>RemoveSingleButtonClass</code>) that colour each button
+differently. Classes are composed as <code>dl-btn</code> + shared + per-button.</p>
+
+<DualListbox TItem="Fruit"
+             @bind-Source="_available2"
+             @bind-Selected="_selected2"
+             TextSelector="f => f.Name"
+             ValueSelector="f => f.Id"
+             SourceHeader="Available"
+             SelectedHeader="Selected"
+             ButtonClass="demo-btn"
+             AddSingleButtonClass="demo-btn-add"
+             AddAllButtonClass="demo-btn-add"
+             RemoveAllButtonClass="btn btn-danger"
+             RemoveSingleButtonClass="demo-btn-remove" />
+
+<style>
+    /* Shared class: applied to all four buttons via ButtonClass. */
+    .demo-btn {
+        border: none;
+        border-radius: 999px;
+        padding: 0.35rem 0.9rem;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .demo-btn:disabled {
+        opacity: 0.4;
+        cursor: default;
+    }
+
+    /* Per-button classes: distinct colours for the "add" vs "remove" directions. */
+    .demo-btn-add { background-color: #2e7d32; }
+    .demo-btn-add:hover:not(:disabled) { background-color: #1b5e20; }
+
+    .demo-btn-remove { background-color: #c62828; }
+    .demo-btn-remove:hover:not(:disabled) { background-color: #8e0000; }
+</style>
+
 @code {
     private IEnumerable<Fruit> _available = new List<Fruit>
     {
@@ -42,6 +88,14 @@ keyboard (focus a list, then arrows to navigate, space to select, enter to move)
     };
 
     private IEnumerable<Fruit> _selected = new List<Fruit>();
+
+    private IEnumerable<Fruit> _available2 = new List<Fruit>
+    {
+        new(1, "Apple"), new(2, "Banana"), new(3, "Cherry"), new(4, "Date"),
+        new(5, "Elderberry"), new(6, "Fig"),
+    };
+
+    private IEnumerable<Fruit> _selected2 = new List<Fruit>();
 
     private string? _lastMove;
 
