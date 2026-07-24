@@ -5,7 +5,7 @@ list boxes with controls to move items between them — via buttons, double-clic
 keyboard.
 
 - **Render-mode agnostic** — works in Blazor Server, WebAssembly, and .NET 8+ unified hosting.
-- **Multi-targets** `net6.0` and `net8.0`.
+- **Multi-targets** `net6.0`, `net8.0`, and `net10.0`.
 - **No CSS framework dependency** — clean default styling via CSS isolation, themeable with
   CSS custom properties. Bring Bootstrap/Tailwind/your own classes if you want them.
 - **Accessible** — `role="listbox"`/`role="option"`, `aria-multiselectable`, `aria-selected`,
@@ -174,7 +174,7 @@ operable by keyboard. This is a deliberate differentiator versus many existing c
 
 ## Requirements
 
-- .NET 6 or .NET 8 (the package multi-targets `net6.0;net8.0`).
+- .NET 6, .NET 8, or .NET 10 (the package multi-targets `net6.0;net8.0;net10.0`).
 - Works with any Blazor render mode (Server, WebAssembly, or .NET 8+ Auto/unified hosting).
 
 ## Contributing
