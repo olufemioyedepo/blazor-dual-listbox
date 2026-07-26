@@ -1,0 +1,202 @@
+@page "/"
+
+<PageTitle>BlazorDualListbox — Demo</PageTitle>
+
+<div class="container">
+
+    @* ---- 1. Basic ---- *@
+    <section class="example">
+        <h2>1. Basic usage</h2>
+        <p>Two-way bound <code>Source</code> and <code>Selected</code>. Move items with the buttons,
+            by double-clicking, or with the keyboard (focus a list, then arrows, space, enter).</p>
+
+        <DualListbox TItem="Person"
+                     @bind-Source="_basicSource"
+                     @bind-Selected="_basicSelected"
+                     TextSelector="p => p.Name"
+                     ValueSelector="p => p.Id"
+                     SourceHeader="Available"
+                     SelectedHeader="Selected"
+                     OnMoved="HandleMoved" />
+
+        <p class="status"><strong>Selected:</strong>
+            @(_basicSelected.Any() ? string.Join(", ", _basicSelected.Select(p => p.Name)) : "—")
+            @if (_lastMove is not null) { <text> · <em>@_lastMove</em></text> }
+        </p>
+
+        <pre><code>@BasicSnippet</code></pre>
+    </section>
+
+    @* ---- 2. Filtering + move-all ---- *@
+    <section class="example">
+        <h2>2. Filtering &amp; move-all</h2>
+        <p>Set <code>Filterable</code> to show a search box over each list, and <code>AllowMoveAll</code>
+            for the »/« buttons. Move-all respects the active filter (only visible items move).</p>
+
+        <DualListbox TItem="Person"
+                     @bind-Source="_filterSource"
+                     @bind-Selected="_filterSelected"
+                     TextSelector="p => p.Name"
+                     ValueSelector="p => p.Id"
+                     Filterable="true"
+                     AllowMoveAll="true"
+                     SourceHeader="Available"
+                     SelectedHeader="Selected" />
+
+        <pre><code>@FilterSnippet</code></pre>
+    </section>
+
+    @* ---- 3. Custom item template ---- *@
+    <section class="example">
+        <h2>3. Custom item template</h2>
+        <p>Use <code>ItemTemplate</code> to render each item however you like — here, a name with a
+            role badge.</p>
+
+        <DualListbox TItem="Person"
+                     @bind-Source="_tplSource"
+                     @bind-Selected="_tplSelected"
+                     ValueSelector="p => p.Id"
+                     SourceHeader="Available"
+                     SelectedHeader="Team">
+            <ItemTemplate Context="p">
+                <span class="person-row">
+                    <span>@p.Name</span>
+                    <span class="role-badge">@p.Role</span>
+                </span>
+            </ItemTemplate>
+        </DualListbox>
+
+        <pre><code>@TemplateSnippet</code></pre>
+    </section>
+
+    @* ---- 4. Theming with CSS variables ---- *@
+    <section class="example">
+        <h2>4. Theming with CSS custom properties</h2>
+        <p>The component exposes <code>--dl-*</code> variables. Override them on any ancestor to
+            re-skin it — no build step, no framework.</p>
+
+        <div class="dl-theme-violet">
+            <DualListbox TItem="Person"
+                         @bind-Source="_themeSource"
+                         @bind-Selected="_themeSelected"
+                         TextSelector="p => p.Name"
+                         ValueSelector="p => p.Id"
+                         SourceHeader="Available"
+                         SelectedHeader="Selected" />
+        </div>
+
+        <pre><code>@ThemeSnippet</code></pre>
+    </section>
+
+    @* ---- 5. Custom button classes ---- *@
+    <section class="example">
+        <h2>5. Custom button classes</h2>
+        <p>A shared <code>ButtonClass</code> plus per-button classes
+            (<code>AddSingleButtonClass</code>, <code>AddAllButtonClass</code>,
+            <code>RemoveAllButtonClass</code>, <code>RemoveSingleButtonClass</code>). Classes compose
+            as <code>dl-btn</code> + shared + per-button.</p>
+
+        <DualListbox TItem="Person"
+                     @bind-Source="_btnSource"
+                     @bind-Selected="_btnSelected"
+                     TextSelector="p => p.Name"
+                     ValueSelector="p => p.Id"
+                     SourceHeader="Available"
+                     SelectedHeader="Selected"
+                     ButtonClass="demo-btn"
+                     AddSingleButtonClass="demo-btn-add"
+                     AddAllButtonClass="demo-btn-add"
+                     RemoveAllButtonClass="demo-btn-remove"
+                     RemoveSingleButtonClass="demo-btn-remove" />
+
+        <pre><code>@ButtonSnippet</code></pre>
+    </section>
+
+</div>
+
+@code {
+    private record Person(int Id, string Name, string Role);
+
+    private static List<Person> People() => new()
+    {
+        new(1, "Alice Ng", "Design"), new(2, "Bob Reyes", "Engineering"),
+        new(3, "Carol Diaz", "Product"), new(4, "Dan Cho", "Engineering"),
+        new(5, "Eve Larsson", "Design"), new(6, "Frank Ito", "Sales"),
+        new(7, "Grace Park", "Engineering"), new(8, "Heidi Vogel", "Product"),
+    };
+
+    // Each example gets its own independent pair of lists.
+    private IEnumerable<Person> _basicSource = People();
+    private IEnumerable<Person> _basicSelected = new List<Person>();
+    private string? _lastMove;
+
+    private void HandleMoved(DualListboxMoveEventArgs<Person> e)
+        => _lastMove = $"{e.Items.Count} moved {e.Direction}";
+
+    private IEnumerable<Person> _filterSource = People();
+    private IEnumerable<Person> _filterSelected = new List<Person>();
+
+    private IEnumerable<Person> _tplSource = People();
+    private IEnumerable<Person> _tplSelected = new List<Person>();
+
+    private IEnumerable<Person> _themeSource = People();
+    private IEnumerable<Person> _themeSelected = new List<Person>();
+
+    private IEnumerable<Person> _btnSource = People();
+    private IEnumerable<Person> _btnSelected = new List<Person>();
+
+    private const string BasicSnippet = @"<DualListbox TItem=""Person""
+             @bind-Source=""available""
+             @bind-Selected=""selected""
+             TextSelector=""p => p.Name""
+             ValueSelector=""p => p.Id""
+             SourceHeader=""Available""
+             SelectedHeader=""Selected""
+             OnMoved=""HandleMoved"" />";
+
+    private const string FilterSnippet = @"<DualListbox TItem=""Person""
+             @bind-Source=""available""
+             @bind-Selected=""selected""
+             TextSelector=""p => p.Name""
+             ValueSelector=""p => p.Id""
+             Filterable=""true""
+             AllowMoveAll=""true"" />";
+
+    private const string TemplateSnippet = @"<DualListbox TItem=""Person""
+             @bind-Source=""available""
+             @bind-Selected=""team""
+             ValueSelector=""p => p.Id"">
+    <ItemTemplate Context=""p"">
+        <span class=""person-row"">
+            <span>@p.Name</span>
+            <span class=""role-badge"">@p.Role</span>
+        </span>
+    </ItemTemplate>
+</DualListbox>";
+
+    private const string ThemeSnippet = @"<div class=""dl-theme-violet"">
+    <DualListbox TItem=""Person"" @bind-Source=""available"" @bind-Selected=""selected""
+                 TextSelector=""p => p.Name"" ValueSelector=""p => p.Id"" />
+</div>
+
+<style>
+    .dl-theme-violet {
+        --dl-bg: #faf5ff;
+        --dl-fg: #4c1d95;
+        --dl-highlight-bg: #7c3aed;
+        --dl-accent: #7c3aed;
+        --dl-border-color: #c4b5fd;
+    }
+</style>";
+
+    private const string ButtonSnippet = @"<DualListbox TItem=""Person""
+             @bind-Source=""available""
+             @bind-Selected=""selected""
+             TextSelector=""p => p.Name""
+             ValueSelector=""p => p.Id""
+             ButtonClass=""demo-btn""
+             AddSingleButtonClass=""demo-btn-add""
+             AddAllButtonClass=""demo-btn-add""
+             RemoveAllButtonClass=""demo-btn-remove""
+             RemoveSingleButtonClass=""demo-btn-remove"" />";
+}
