@@ -5,8 +5,8 @@ Intended to be published as a NuGet package and open-sourced.
 
 ## Confirmed decisions
 
-- **Target frameworks:** Multi-target the RCL as `net6.0;net8.0` (in-support LTS lines),
-  optionally add `net9.0`/`net10.0`. `.NET 6` is the floor for broad adoption.
+- **Target frameworks:** RCL multi-targets `net6.0;net8.0;net10.0` (net10.0 added).
+  `.NET 6` is the floor for broad adoption.
   - Constraint: code must use APIs common to all targets. `@bind:after` and some newer
     render-mode APIs arrived in .NET 8, so v1 uses `net6.0`-compatible patterns
     (explicit `EventCallback` wiring rather than `@bind:after`).
@@ -29,14 +29,23 @@ blazor-dual-listbox/
    │  ├─ BlazorDualListbox.csproj       #   multi-targets net6.0;net8.0, NuGet metadata
    │  └─ _Imports.razor
    ├─ DemoApp/                          # Blazor Web App (net10.0, interactive Server)
+   ├─ BlazorDualListbox.DemoWasm/       # Blazor WASM demo (deployed to GitHub Pages)
    └─ BlazorDualListbox.Tests/          # bUnit + xUnit (net8.0)
 ```
+
+**CI/CD workflows** (`.github/workflows/`):
+- `deploy-demo.yml` — builds `BlazorDualListbox.DemoWasm` and deploys to GitHub Pages.
+- `publish-nuget.yml` — on a pushed `v*` tag: test → pack (version from tag) → push to
+  nuget.org via **NuGet trusted publishing (OIDC)**. No stored API key; requires a
+  trusted-publishing policy on nuget.org + a `nuget` GitHub environment. Publisher user
+  is `Feminator`.
 
 Still to add at repo root during OSS-scaffolding phase: `README.md`, `LICENSE`,
 `CONTRIBUTING.md`, `CHANGELOG.md`, `.github/workflows/ci.yml`.
 
 **Framework versions:** RCL references `Microsoft.AspNetCore.Components.Web` per TFM
-(6.0.36 for net6.0, 8.0.11 for net8.0). DemoApp is net10.0; Tests is net8.0 (bUnit floor).
+(6.0.36 for net6.0, 8.0.11 for net8.0, 10.0.0 for net10.0). DemoApp is net10.0;
+Tests is net8.0 (bUnit floor).
 
 ## Component API (core design)
 
@@ -97,3 +106,18 @@ NuGet metadata in `.csproj` (PackageId, description, tags, repo URL,
 6. bUnit tests.
 7. OSS scaffolding + CI + NuGet packaging.
 8. (Later) optional drag-and-drop, reorder-within-list.
+
+## Release & deployment status
+
+- **Live demo:** deployed to GitHub Pages at
+  <https://olufemioyedepo.github.io/blazor-dual-listbox/> (Blazor WASM, all links
+  resolve). Also set as the repo's About → Website link.
+- **NuGet package:** version **1.0.0**. Released by pushing tag `v1.0.0`, which triggers
+  `publish-nuget.yml` (trusted publishing). Package page:
+  <https://www.nuget.org/packages/BlazorDualListbox>.
+- **Release process:** bump `<Version>` in `BlazorDualListbox.csproj` (fallback) and push a
+  matching `v*` tag — the workflow derives the published version from the tag via
+  `-p:Version=`.
+- **Pre-flight verified this session:** `dotnet test` (16 passed) and `dotnet pack` (clean
+  `.nupkg` — 3 TFM DLLs + XML docs, embedded README, MIT expression, CSS-isolation bundle,
+  no demo/test leakage).
