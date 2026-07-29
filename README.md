@@ -1,5 +1,9 @@
 # BlazorDualListbox
 
+[![NuGet](https://img.shields.io/nuget/v/BlazorDualListbox.svg)](https://www.nuget.org/packages/BlazorDualListbox)
+[![NuGet downloads](https://img.shields.io/nuget/dt/BlazorDualListbox.svg)](https://www.nuget.org/packages/BlazorDualListbox)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 A generic, accessible **dual-listbox** (pick-list) component for Blazor. Two side-by-side
 list boxes with controls to move items between them — via buttons, double-click, or the
 keyboard.
@@ -18,8 +22,6 @@ keyboard.
 ```bash
 dotnet add package BlazorDualListbox
 ```
-
-> Currently pre-release (`0.1.0-alpha`). Add `--prerelease` if your tooling requires it.
 
 Add the namespace to `_Imports.razor` (or the individual page):
 
