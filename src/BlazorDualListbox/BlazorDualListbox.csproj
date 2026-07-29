@@ -10,7 +10,7 @@
   <!-- NuGet package metadata -->
   <PropertyGroup>
     <PackageId>BlazorDualListbox</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>ooyedepo</Authors>
     <Description>A generic Blazor dual-listbox component: move items between two listboxes via buttons and double-click. Render-mode agnostic, accessible, no CSS framework dependency.</Description>
     <PackageTags>blazor;component;listbox;dual-listbox;picklist;razor</PackageTags>
